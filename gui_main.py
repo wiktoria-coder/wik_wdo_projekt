@@ -35,7 +35,7 @@ def open_main_app():
             )
             popup_text = f"{plac['nazwa']} ({plac['miasto']})"
             if pracownicy_tekst:
-                popup_text += f"\n{pracownicy_tekst}"
+                popup_text += f"\n--- Pracownicy ---\n{pracownicy_tekst}"
 
             marker = mapa.set_marker(plac["lat"], plac["lon"], text=popup_text)
 
