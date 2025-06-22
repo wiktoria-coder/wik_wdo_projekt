@@ -2,6 +2,8 @@ from tkinter import *
 from tkinter import messagebox
 import tkintermapview
 from utils import CoordinateFetcher
+from gui_interactive_maps import pokaz_mapke_bankow
+
 
 placowki = []
 markery_placowek = {}
@@ -454,6 +456,9 @@ def open_main_app():
 
     Radiobutton(frame_widok_klienci, text="Wszyscy", variable=tryb_widoku, value="wszyscy",command=odswiez_liste_klientow).pack(side=LEFT)
     Radiobutton(frame_widok_klienci, text="Z placówki", variable=tryb_widoku, value="z_placowki",command=odswiez_liste_klientow).pack(side=LEFT)
+
+    # mapka_bankow – przycisk pod listą placówek
+    Button(frame_left, text="Mapa banków", command=lambda: pokaz_mapke_bankow(placowki)).pack(pady=(10, 0))
 
     odswiez_liste()
     odswiez_liste_pracownikow()
