@@ -64,3 +64,26 @@ def pokaz_mapke_pracownikow_z_placowki(lista_pracownikow, nazwa_placowki):
     for (lat, lon), pracownicy_na_miejscu in lokalizacje.items():
         opis = "\n".join(f"{p['imie']} {p['nazwisko']} ({p['stanowisko']})" for p in pracownicy_na_miejscu)
         mapa.set_marker(lat, lon, text=opis)
+
+
+def pokaz_mapke_klientow_z_placowki(lista_klientow, nazwa_placowki):
+    okno = Toplevel()
+    okno.title(f"Mapa klientów z placówki: {nazwa_placowki}")
+    okno.geometry("800x600")
+
+    mapa = tkintermapview.TkinterMapView(okno, width=800, height=600, corner_radius=0)
+    mapa.pack(fill="both", expand=True)
+
+    mapa.set_position(52.2297, 21.0122)  # Centrum Polski
+    mapa.set_zoom(6)
+
+    lokalizacje = {}
+    for klient in lista_klientow:
+        if klient.get("placowka") != nazwa_placowki:
+            continue
+        key = (klient.get("lat", 52.2297), klient.get("lon", 21.0122))
+        lokalizacje.setdefault(key, []).append(klient)
+
+    for (lat, lon), klienci_na_miejscu in lokalizacje.items():
+        opis = "\n".join(f"{k['imie']} {k['nazwisko']} (Klient)" for k in klienci_na_miejscu)
+        mapa.set_marker(lat, lon, text=opis)

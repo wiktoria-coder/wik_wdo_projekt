@@ -5,6 +5,7 @@ from utils import CoordinateFetcher
 from gui_interactive_maps import pokaz_mapke_bankow
 from gui_interactive_maps import pokaz_mapke_pracownikow
 from gui_interactive_maps import pokaz_mapke_pracownikow_z_placowki
+from gui_interactive_maps import pokaz_mapke_klientow_z_placowki
 
 placowki = []
 markery_placowek = {}
@@ -466,8 +467,19 @@ def open_main_app():
 
     #MAPA WYBRANYCH PRACOWNIKÓW
     Button(frame_left, text="Mapa pracowników z placówki",
-           command=lambda: pokaz_mapke_pracownikow_z_placowki(pracownicy,
-                                                              placowki[listbox.curselection()[0]]["nazwa"])).pack(pady=(5, 0))
+           command=lambda: pokaz_mapke_pracownikow_z_placowki(
+               pracownicy,
+               placowki[listbox.curselection()[0]]["nazwa"]
+           )
+        ).pack(pady=(5, 0))
+
+    #Mapa klientów
+    Button(frame_left,text="Mapa klientów z placówki",
+        command=lambda: pokaz_mapke_klientow_z_placowki(
+            klienci,
+            placowki[listbox.curselection()[0]]["nazwa"]
+        )
+    ).pack(pady=(5, 0))
 
     odswiez_liste()
     odswiez_liste_pracownikow()
