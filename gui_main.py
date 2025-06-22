@@ -4,7 +4,7 @@ import tkintermapview
 from utils import CoordinateFetcher
 from gui_interactive_maps import pokaz_mapke_bankow
 from gui_interactive_maps import pokaz_mapke_pracownikow
-
+from gui_interactive_maps import pokaz_mapke_pracownikow_z_placowki
 
 placowki = []
 markery_placowek = {}
@@ -463,6 +463,11 @@ def open_main_app():
 
     #mapa wszystkich pracowników
     Button(frame_left, text="Mapa pracowników", command=lambda: pokaz_mapke_pracownikow(pracownicy)).pack(pady=(5, 0))
+
+    #MAPA WYBRANYCH PRACOWNIKÓW
+    Button(frame_left, text="Mapa pracowników z placówki",
+           command=lambda: pokaz_mapke_pracownikow_z_placowki(pracownicy,
+                                                              placowki[listbox.curselection()[0]]["nazwa"])).pack(pady=(5, 0))
 
     odswiez_liste()
     odswiez_liste_pracownikow()
