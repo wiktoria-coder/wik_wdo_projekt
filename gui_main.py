@@ -3,6 +3,7 @@ from tkinter import messagebox
 import tkintermapview
 from utils import CoordinateFetcher
 from gui_interactive_maps import pokaz_mapke_bankow
+from gui_interactive_maps import pokaz_mapke_pracownikow
 
 
 placowki = []
@@ -459,6 +460,9 @@ def open_main_app():
 
     # mapka_bankow – przycisk pod listą placówek
     Button(frame_left, text="Mapa banków", command=lambda: pokaz_mapke_bankow(placowki)).pack(pady=(10, 0))
+
+    #mapa wszystkich pracowników
+    Button(frame_left, text="Mapa pracowników", command=lambda: pokaz_mapke_pracownikow(pracownicy)).pack(pady=(5, 0))
 
     odswiez_liste()
     odswiez_liste_pracownikow()
