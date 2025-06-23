@@ -7,26 +7,34 @@ from gui_interactive_maps import pokaz_mapke_pracownikow
 from gui_interactive_maps import pokaz_mapke_pracownikow_z_placowki
 from gui_interactive_maps import pokaz_mapke_klientow_z_placowki
 
+#listy przechowujące dane poniższych rzeczy
 placowki = []
-markery_placowek = {}
-markery_pracownikow = {}
-markery_klientow = {}
 pracownicy = []
 klienci = []
 
+# Słowniki do przechowywania znaczników mapy
+markery_placowek = {}
+markery_pracownikow = {} # Markery pracowników (jeśli nie przypisani do placówki)
+markery_klientow = {} # Markery klientów (jeśli nie przypisani do placówki)
+
 
 def open_main_app():
-    root = Toplevel()
+    root = Tk()
     root.title("System Zarzadzania Bankiem")
     root.geometry("1200x850")
+    root.configure(bg="#dceeff")
+
 
     tryb_widoku = StringVar(value="wszyscy")
 
+    # Odświeżenie listy widocznych placówek w interfejsie użytkownika
     def odswiez_liste():
         listbox.delete(0, END)
         for plac in placowki:
             listbox.insert(END, f"{plac['nazwa']} - {plac['miasto']}")
 
+    # Usunięcie wszystkich znaczników z mapy i ponowne ich narysowanie
+    # dla każdej placówki, jej pracowników i klientów
     def odswiez_markery():
         for m in markery_placowek.values():
             m.delete()
@@ -88,6 +96,7 @@ def open_main_app():
                 marker = mapa.set_marker(klient.get("lat", 52.2297), klient.get("lon", 21.0122), text=tekst)
                 markery_klientow[klucz] = marker
 
+    # Odświeżenie listy pracowników — wszystkich lub przypisanych do wybranej placówki
     def odswiez_liste_pracownikow():
         listbox_prac.delete(0, END)
         wybrane = listbox.curselection()
@@ -100,6 +109,7 @@ def open_main_app():
                 if p.get("placowka") == nazwa_plac:
                     listbox_prac.insert(END, f"{p['imie']} {p['nazwisko']} - {p['stanowisko']}")
 
+    # Odświeżenie listy klientów — wszystkich lub przypisanych do wybranej placówki
     def odswiez_liste_klientow():
         listbox_klienci.delete(0, END)
         wybrane = listbox.curselection()
@@ -112,6 +122,7 @@ def open_main_app():
                 if k.get("placowka") == nazwa_plac:
                     listbox_klienci.insert(END, f"{k['imie']} {k['nazwisko']}")
 
+    # Dodanie nowej placówki bankowej na podstawie danych wpisanych przez użytkownika
     def dodaj_placowke():
         nazwa = entry_nazwa.get()
         miasto = entry_miasto.get()
@@ -132,6 +143,7 @@ def open_main_app():
         entry_nazwa.delete(0, END)
         entry_miasto.delete(0, END)
 
+    # Aktualizacja danych wybranej placówki
     def aktualizuj_placowke():
         idx = listbox.curselection()
         if not idx:
@@ -157,6 +169,7 @@ def open_main_app():
         entry_nazwa.delete(0, END)
         entry_miasto.delete(0, END)
 
+    # Usunięcie wybranej placówki i odłączenie od niej przypisanych pracowników i klientów
     def usun_placowke():
         idx = listbox.curselection()
         if not idx:
@@ -182,6 +195,7 @@ def open_main_app():
         odswiez_liste_klientow()
         odswiez_markery()
 
+    # Po kliknięciu na placówkę w liście — przesunięcie mapy na jej lokalizację
     def pokaz_na_mapie(event):
         idx = listbox.curselection()
         if not idx:
@@ -195,8 +209,7 @@ def open_main_app():
         entry_miasto.insert(0, plac["miasto"])
         odswiez_liste_pracownikow()
 
-
-
+    # Dodanie nowego pracownika przypisanego do wybranej placówki
     def dodaj_pracownika():
         imie = entry_imie.get()
         nazwisko = entry_nazwisko.get()
@@ -232,6 +245,7 @@ def open_main_app():
         entry_nazwisko.delete(0, END)
         entry_stanowisko.delete(0, END)
 
+    # Usunięcie wybranego pracownika z listy i mapy
     def usun_pracownika():
         idx = listbox_prac.curselection()
         if not idx:
@@ -248,6 +262,7 @@ def open_main_app():
         odswiez_liste_pracownikow()
         odswiez_markery()
 
+    # Aktualizacja danych wybranego pracownika
     def aktualizuj_pracownika():
         idx = listbox_prac.curselection()
         if not idx:
@@ -281,8 +296,7 @@ def open_main_app():
         entry_nazwisko.delete(0, END)
         entry_stanowisko.delete(0, END)
 
-
-
+    # Dodanie nowego klienta przypisanego do wybranej placówki
     def dodaj_klienta():
         imie = entry_klient_imie.get()
         nazwisko = entry_klient_nazwisko.get()
@@ -315,6 +329,7 @@ def open_main_app():
         entry_klient_imie.delete(0, END)
         entry_klient_nazwisko.delete(0, END)
 
+    # Usunięcie wybranego klienta z listy i mapy
     def usun_klienta():
         idx = listbox_klienci.curselection()
         if not idx:
@@ -330,6 +345,7 @@ def open_main_app():
         odswiez_liste_klientow()
         odswiez_markery()
 
+    # Aktualizacja danych wybranego klienta
     def aktualizuj_klienta():
         idx = listbox_klienci.curselection()
         if not idx:
@@ -360,7 +376,7 @@ def open_main_app():
 
 
     # === GUI ===
-#RAMKA LISTY PLACÓWEK BANKU
+    # Tworzenie lewej ramki: lista placówek, formularze dodawania/edycji oraz przyciski map
     frame_left = Frame(root)
     frame_left.pack(side=LEFT, fill=Y, padx=10, pady=10)
 
@@ -382,16 +398,17 @@ def open_main_app():
     Button(frame_left, text="Dodaj placówkę", command=dodaj_placowke).pack(pady=10)
     Button(frame_left, text="Aktualizuj placówkę", command=aktualizuj_placowke).pack(pady=5)
 
+    # Ramka mapy – główna mapa aplikacji
     frame_right = Frame(root)
     frame_right.pack(side=TOP, fill=BOTH, expand=True, padx=10, pady=10)
 
-#RAMKA MAPY
-    mapa = tkintermapview.TkinterMapView(frame_right, width=700, height=400, corner_radius=0)
-    mapa.pack()
+
+    mapa = tkintermapview.TkinterMapView(frame_right, corner_radius=0)
+    mapa.pack(fill=BOTH, expand=True)
     mapa.set_position(52.2297, 21.0122)
     mapa.set_zoom(6)
 
-#RAMKA LISTA PRACOWNIKÓW I KLIENTÓW
+#dolna ramka: lista pracowników i klientów wraz z formularzami
     #Pracownicy
     frame_dolny = Frame(root)
     frame_dolny.pack(side=BOTTOM, fill=X, padx=10, pady=10)
